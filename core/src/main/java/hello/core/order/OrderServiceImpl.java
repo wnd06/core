@@ -7,11 +7,17 @@ import hello.core.member.*;
 
 public class OrderServiceImpl implements OrderService{
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
+    private final MemberRepository memberRepository;
     //private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
     //고정적으로 1000원 할인하는 정책
-    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
+    //private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
     // -> OCP 위반!!!, DIP도 위반!!(구체 클래스 RateDiscountPolicy 의존!!)
+    private final DiscountPolicy discountPolicy;
+    // 인터페이스에만 의존하도록 변경
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
 
